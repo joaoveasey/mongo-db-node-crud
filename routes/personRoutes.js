@@ -1,14 +1,11 @@
 const router = require('express').Router()
-const Person = require('../Models/Person')
+const Person = require('../models/Person')
 
-// Criação
 router.post('/', async (req, res) => {
-    // req.body 
     const { name, salary, approved } = req.body
 
-    //validações body da request
-    if(!name) {
-        res.status(422).message({error: 'O nome é obrigatório.'})
+    if(!name){
+        res.status(422).json({ error: 'O campo nome é obrigatório.'})
         return
     }
 
@@ -18,7 +15,6 @@ router.post('/', async (req, res) => {
         approved
     }
 
-    // create
     try {
         await Person.create(person)
 
@@ -28,7 +24,6 @@ router.post('/', async (req, res) => {
     }
 })
 
-// Leitura
 router.get('/', async (req, res) => {
     try {
         const people = await Person.find()
@@ -56,7 +51,6 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-// Atualização
 router.patch('/:id', async (req, res) => {
     const id = req.params.id
 
@@ -74,7 +68,7 @@ router.patch('/:id', async (req, res) => {
         console.log(updatedPerson)
 
         if (updatedPerson.matchedCount === 0) {
-            res.status(422).json({ message: 'O usuário não foi encontrado!' })
+            res.status(422).json({ error: 'O usuário não foi encontrado!' })
             return
         }
         res.status(200).json(person)
@@ -83,7 +77,6 @@ router.patch('/:id', async (req, res) => {
     }
 })
 
-// Deletar
 router.delete('/:id', async (req, res) => {
     const id = req.params.id
 
